@@ -68,7 +68,7 @@ This must be a `string` or a `function` that returns a string.
 Hight-order function which returns message output handler.
 This must be a `function` or an `array` of functions.
 
-default to : `require('adsl').defaultTransport`
+default to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L41)
 
 ## License
 

@@ -38,7 +38,6 @@ function ADSL (opts) {
 
 ADSL.levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
 ADSL.defaultLevel = 'info'
-
 ADSL.defaultTransport = function (level, levelIndex) {
   var polyfill = {
     trace: console.info,
