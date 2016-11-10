@@ -18,7 +18,7 @@
     "logger",
     "logging",
     "stderr",
-    "stdout",
+    "stdout"
   ],
   "author": "Steven Enten <steven@enten.fr>",
   "license": "MIT",
