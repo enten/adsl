@@ -56,7 +56,10 @@ var log = require('adsl')({
 
 ### level
 
-A `string` to specify the log level. Defaults to `info`.
+A `string` to specify the log level.
+
+Defaults to :
+[`require('adsl').defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L40) = `info`
 
 ### prefix
 
@@ -68,7 +71,7 @@ This must be a `string` or a `function` that returns a string.
 Hight-order function which returns message output handler.
 This must be a `function` or an `array` of functions.
 
-default to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L41)
+Defaults to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L41)
 
 ## License
 
