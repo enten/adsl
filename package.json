@@ -1,0 +1,29 @@
+{
+  "name": "adsl",
+  "version": "0.0.1",
+  "description": "Another dead simple logger",
+  "main": "index.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enten/adsl.git"
+  },
+  "keywords": [
+    "awesome",
+    "console",
+    "console.log",
+    "log",
+    "logger",
+    "logging",
+    "stderr",
+    "stdout",
+  ],
+  "author": "Steven Enten <steven@enten.fr>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enten/adsl/issues"
+  },
+  "homepage": "https://github.com/enten/adsl#readme"
+}
