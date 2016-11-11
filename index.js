@@ -4,6 +4,9 @@ var util = require('util')
 
 function ADSL (opts) {
   opts = opts || {}
+  if (typeof opts === 'string') {
+    opts = {level: opts}
+  }
   if (typeof opts.level === 'number') {
     opts.level = ADSL.levels[opts.level]
   }
