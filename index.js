@@ -12,11 +12,10 @@ function ADSL (opts) {
     opts.prefix = function () { return strPrefix }
   }
 
-  var logger = {}
-  var level = opts.level || ADSL.defaultLevel
+  var level = ~ADSL.levels.indexOf(opts.level) ? opts.level : ADSL.defaultLevel
   var levelIndex = ADSL.levels.indexOf(level)
+  var logger = {level, levelIndex}
   var prefix = opts.prefix || function () {}
-
   var transports = []
     .concat(opts.transport || ADSL.defaultTransport)
     .map(function (transport) { return transport(level, levelIndex) })
