@@ -55,7 +55,9 @@ var logWriteStream = fs.createWriteStream('log.txt')
 
 const log = adsl({
   level: 'info',
-  prefix: level => level.toUpperCase(),
+  prefix(level) {
+    return level.toUpperCase()
+  },
   transport: [
     colorsTransport,
     streamTransport.bind(null, logWriteStream)
