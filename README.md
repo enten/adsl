@@ -82,7 +82,9 @@ Configure the logger by passing an options object:
 ```js
 var log = require('adsl')({
   level: 'info',
-  prefix: (level) => level.toUpperCase(),
+  prefix(level) {
+    return level.toUpperCase()
+  },
   transport(loggerLevel, loggerLevelNum) {
     return function(msg, prefix, msgLevel, msgLevelNum) {
       console.log(msgLevelNum, prefix, msg)
