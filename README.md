@@ -20,14 +20,37 @@ npm install adsl
 ## Example usage
 
 ```js
-var log = require('adsl')({ level: 'info' })
+// example.js
+const ADSL = require('.')
+const fs = require('fs')
+const os = require('os')
 
-log.trace('a') // will not do anything
-log.debug('b') // will not do anything
-log.info('c')  // will output 'c\n' on STDOUT
-log.warn('d')  // will output 'd\n' on STDERR
-log.error('e') // will output 'e\n' on STDERR
-log.fatal('f') // will output 'f\n' on STDERR
+function streamTransport(wstream, loggerLevel, loggerLevelNum) {
+  return (message, prefix, level, levelNum) =>
+    wstream.write(
+      `${levelNum} ${new Date().toISOString()} ${prefix} ${message}${os.EOL}`)
+}
+
+var logWriteStream = fs.createWriteStream('log.txt')
+
+const log = ADSL({
+  level: 'info',
+  prefix: level => level.toUpperCase(),
+  transport: [
+    ADSL.defaultTransport,
+    streamTransport.bind(null, logWriteStream)
+  ]
+})
+
+log.info('foo')
+log.debug('bar')
+
+// $ node example.js
+// INFO foo
+//
+// $ cat log.txt
+// 2 2016-11-11T04:59:53.539Z INFO foo
+// 1 2016-11-11T04:59:53.540Z DEBUG bar
 ```
 
 ## Options
@@ -38,17 +61,9 @@ Configure the logger by passing an options object:
 var log = require('adsl')({
   level: 'info',
   prefix: (level) => level.toUpperCase(),
-  transport: function (loggerLevel, loggerLevelNumber) {
-    let fatalLines = 0
-
-    return (message, prefix, level, levelNumber) => {
-      if (level === 'fatal' && ++fatalLines > 100) {
-        request.post('http://logger-provider/log/fatal', {message})
-          .then(() => fatalLines = 0)
-      }
-      if (levelNumber >= loggerLevelNumber) {
-        console.log(prefix ? `${prefix} ${message}` : message)
-      }
+  transport(loggerLevel, loggerLevelNum) {
+    return function(msg, prefix, msgLevel, msgLevelNum) {
+      console.log(msgLevelNum, prefix, msg)
     }
   }
 })
@@ -59,7 +74,7 @@ var log = require('adsl')({
 A `string` to specify the log level.
 
 Defaults to :
-[`require('adsl').defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L40) = `info`
+[`require('adsl').defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L42) = `info`
 
 ### prefix
 
@@ -71,7 +86,7 @@ This must be a `string` or a `function` that returns a string.
 Hight-order function which returns message output handler.
 This must be a `function` or an `array` of functions.
 
-Defaults to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L41)
+Defaults to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L43)
 
 ## License
 
