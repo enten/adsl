@@ -21,7 +21,7 @@ npm install adsl
 
 ```js
 // example.js
-const ADSL = require('.')
+const ADSL = require('adsl')
 const fs = require('fs')
 const os = require('os')
 
