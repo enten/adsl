@@ -33,8 +33,8 @@ function colorsTransport (styles, msg, shouldLog, lvl, lvlIndex) {
   return adsl.defaultTransport(msg, shouldLog, lvl, lvlIndex)
 }
 
-function streamTransport (wstream, msg, shouldLog, level, levelIndex) {
-  wstream.write(`${levelIndex} ${new Date} ${msg}${os.EOL}`)
+function streamTransport (wstream, msg, shouldLog, lvl, lvlIndex) {
+  wstream.write(`${lvlIndex} ${new Date()} ${msg}${os.EOL}`)
 }
 
 var logWriteStream = fs.createWriteStream('log.txt')
