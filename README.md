@@ -58,7 +58,7 @@ var logWriteStream = fs.createWriteStream('log.txt')
 
 const log = adsl({
   level: 'info',
-  prefix(level) {
+  prefix (level) {
     return level.toUpperCase()
   },
   transport: [
@@ -74,13 +74,13 @@ const log = adsl({
   ]
 })
 
-log.info('current level:', log.level, log.levelIndex)
+log.warn('current level:', log.levelIndex, log.level)
 log.info('visible')
 log.debug('invisible')
 
 log.level = 'debug'
 
-log.info('current level:', log.level, log.levelIndex)
+log.warn('current level:', log.levelIndex, log.level)
 log.info('foo')
 log.debug('bar')
 

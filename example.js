@@ -34,13 +34,13 @@ const log = adsl({
   ]
 })
 
-log.info('current level:', log.level, log.levelIndex)
+log.warn('current level:', log.levelIndex, log.level)
 log.info('visible')
 log.debug('invisible')
 
 log.level = 'debug'
 
-log.info('current level:', log.level, log.levelIndex)
+log.warn('current level:', log.levelIndex, log.level)
 log.info('foo')
 log.debug('bar')
 
