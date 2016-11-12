@@ -2,14 +2,31 @@
 
 > Another dead simple logger inspired by the awesome [console-log-level](https://github.com/watson/console-log-level).
 
-
-A dead simple logger. Will [log to STDOUT or STDERR depending on the
-chosen log level](https://github.com/enten/adsl/blob/master/index.js#L59). It uses `console.info`, `console.warn` and
-`console.error` and hence supports the same API.
-
-Log levels supported: [trace, debug, info, warn, error and fatal](https://github.com/enten/adsl/blob/master/index.js#L57).
-
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+
+A dead simple logger. Will [log to STDOUT or STDERR depending on the chosen log
+level](https://github.com/enten/adsl/blob/master/index.js#L82). It uses
+`console.info`, `console.warn` and `console.error` and hence supports the same API.
+
+## Log levels sets supported
+
+### [npm](https://github.com/enten/adsl/blob/master/index.js#L79) (default)
+
+```javascript
+{ error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
+```
+
+### [console-log-level](https://github.com/enten/adsl/blob/master/index.js#L78):
+
+```javascript
+{ fatal: 0, error: 1, warn: 2, info: 3, debug: 4 }
+```
+
+### [rfc5424](https://github.com/enten/adsl/blob/master/index.js#L80):
+
+```javascript
+{ emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 }
+```
 
 ## Installation
 
@@ -80,6 +97,7 @@ Configure the logger by passing an options object:
 ```js
 var log = require('adsl')({
   level: 'info',
+  levels: 'npm',
   prefix: function (level) {
     return level.toUpperCase()
   },
@@ -96,7 +114,14 @@ var log = require('adsl')({
 A `string` to specify the log level.
 
 Defaults to :
-[`adsl.defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L58) = `info`
+[`adsl.defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L70) = `"info"`
+
+### levels
+
+An `string` to specify the log levels set used.
+
+Defaults to:
+[`adsl.defaultLevels`](https://github.com/enten/adsl/blob/master/index.js#L71) = `"npm"`
 
 ### prefix
 
@@ -108,7 +133,7 @@ This must be a `string` or a `function` that returns a string.
 Function called by the logger at each logging operation.
 This must be a `function` or an `array` of functions.
 
-Defaults to : [`adsl.defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L64) =
+Defaults to : [`adsl.defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L72) =
 
 ```javascript
 function (msg, shouldLog, lvl, lvlIndex) {
