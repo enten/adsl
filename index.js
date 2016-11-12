@@ -12,10 +12,10 @@ function ADSL (opts) {
     opts.prefix = function () { return strPrefix }
   }
 
-  var level, levelIndex, logger = {}
+  var level, levelIndex
   var transports = [].concat(opts.transport || ADSL.defaultTransport)
 
-  Object.defineProperties(logger, {
+  var logger = Object.defineProperties({}, {
     'level': {
       get: function () { return level },
       set: function (value) {
@@ -26,7 +26,7 @@ function ADSL (opts) {
     },
     'levelIndex': {
       get: function () { return levelIndex },
-      set: function (value) { logger.level = ADSL.levels[value]}
+      set: function (value) { logger.level = ADSL.levels[value] }
     },
     'log': {
       value: function () {
