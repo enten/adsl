@@ -101,7 +101,7 @@ Defaults to :
 Specify this option if you want to set a prefix for all log messages.
 This must be a `string` or a `function` that returns a string.
 
-## transport
+### transport
 
 Function called by the logger at each logging operation.
 This must be a `function` or an `array` of functions.
