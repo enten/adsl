@@ -1,13 +1,13 @@
 # adsl
 
-> Another dead simple logger based on the awesome [console-log-level](https://github.com/watson/console-log-level).
+> Another dead simple logger inspired by the awesome [console-log-level](https://github.com/watson/console-log-level).
 
 
-A dead simple logger. Will log to STDOUT or STDERR depending on the
-chosen log level. It uses `console.info`, `console.warn` and
+A dead simple logger. Will [log to STDOUT or STDERR depending on the
+chosen log level](https://github.com/enten/adsl/blob/master/index.js#L59). It uses `console.info`, `console.warn` and
 `console.error` and hence supports the same API.
 
-Log levels supported: trace, debug, info, warn, error and fatal.
+Log levels supported: [trace, debug, info, warn, error and fatal](https://github.com/enten/adsl/blob/master/index.js#L57).
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
@@ -26,29 +26,15 @@ const colors = require('colors')
 const fs = require('fs')
 const os = require('os')
 
-const styles = {
-  trace: colors.grey,
-  debug: colors.grey,
-  info: colors.cyan,
-  warn: colors.red,
-  error: colors.bgRed,
-  fatal: colors.bgRed
+function colorsTransport (styles, msg, shouldLog, lvl, lvlIndex) {
+  if (colors.supportsColor && styles[lvl]) {
+    msg = styles[lvl](msg)
+  }
+  return adsl.defaultTransport(msg, shouldLog, lvl, lvlIndex)
 }
 
-function colorsTransport (loggerLevel, loggerLevelNum) {
-  const defaultTransport = adsl.defaultTransport(loggerLevel, loggerLevelNum)
-  if (!colors.supportsColor) {
-    return defaultTransport
-  }
-  return (message, prefix, level, levelIndex) => {
-    defaultTransport(styles[level](message), prefix, level, levelIndex)
-  }
-}
-
-function streamTransport (wstream, loggerLevel, loggerLevelNum) {
-  return (message, prefix, level, levelNum) =>
-    wstream.write(
-      `${levelNum} ${new Date().toISOString()} ${prefix} ${message}${os.EOL}`)
+function streamTransport (wstream, msg, shouldLog, level, levelIndex) {
+  wstream.write(`${levelIndex} ${new Date} ${msg}${os.EOL}`)
 }
 
 var logWriteStream = fs.createWriteStream('log.txt')
@@ -59,20 +45,30 @@ const log = adsl({
     return level.toUpperCase()
   },
   transport: [
-    colorsTransport,
-    streamTransport.bind(null, logWriteStream)
+    streamTransport.bind(null, logWriteStream),
+    colorsTransport.bind(null, {
+      trace: colors.grey,
+      debug: colors.grey,
+      info: colors.cyan,
+      warn: colors.red,
+      error: colors.bgRed,
+      fatal: colors.bgRed
+    })
   ]
 })
 
+log.info('current level:', log.level, log.levelIndex)
+log.info('visible')
+log.debug('invisible')
+
+log.level = 'debug'
+
+log.info('current level:', log.level, log.levelIndex)
 log.info('foo')
 log.debug('bar')
 
-// $ node example.js
-// INFO foo
-//
-// $ cat log.txt
-// 2 2016-11-11T04:59:53.539Z INFO foo
-// 1 2016-11-11T04:59:53.540Z DEBUG bar
+logWriteStream.end(os.EOL)
+
 ```
 
 ## Options
@@ -82,12 +78,12 @@ Configure the logger by passing an options object:
 ```js
 var log = require('adsl')({
   level: 'info',
-  prefix(level) {
+  prefix: function (level) {
     return level.toUpperCase()
   },
-  transport(loggerLevel, loggerLevelNum) {
-    return function(msg, prefix, msgLevel, msgLevelNum) {
-      console.log(msgLevelNum, prefix, msg)
+  defaultTransport: function (msg, shouldLog, lvl, lvlIndex) {
+    if (shouldLog) {
+      console.log(lvlIndex, lvl, msg)
     }
   }
 })
@@ -98,7 +94,7 @@ var log = require('adsl')({
 A `string` to specify the log level.
 
 Defaults to :
-[`require('adsl').defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L42) = `info`
+[`adsl.defaultLevel`](https://github.com/enten/adsl/blob/master/index.js#L58) = `info`
 
 ### prefix
 
@@ -107,10 +103,17 @@ This must be a `string` or a `function` that returns a string.
 
 ## transport
 
-Hight-order function which returns message output handler.
+Function called by the logger at each logging operation.
 This must be a `function` or an `array` of functions.
 
-Defaults to : [`require('adsl').defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L43)
+Defaults to : [`adsl.defaultTransport`](https://github.com/enten/adsl/blob/master/index.js#L64) =
+
+```javascript
+function (msg, shouldLog, lvl, lvlIndex) {
+  shouldLog &&
+    (console[ADSL.outputMap[lvl] || lvl] || console.log).call(console, msg)
+}
+```
 
 ## License
 

@@ -1,11 +1,9 @@
 {
   "name": "adsl",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Another dead simple logger",
   "main": "index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/enten/adsl.git"
@@ -25,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/enten/adsl/issues"
   },
-  "homepage": "https://github.com/enten/adsl#readme"
+  "homepage": "https://github.com/enten/adsl#readme",
+  "devDependencies": {
+    "colors": "^1.1.2"
+  }
 }

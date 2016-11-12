@@ -7,51 +7,63 @@ function ADSL (opts) {
   if (typeof opts === 'string') {
     opts = {level: opts}
   }
-  if (typeof opts.level === 'number') {
-    opts.level = ADSL.levels[opts.level]
-  }
   if (typeof opts.prefix === 'string') {
     var strPrefix = opts.prefix
     opts.prefix = function () { return strPrefix }
   }
 
-  var level = ~ADSL.levels.indexOf(opts.level) ? opts.level : ADSL.defaultLevel
-  var levelIndex = ADSL.levels.indexOf(level)
-  var logger = {level, levelIndex}
-  var prefix = opts.prefix || function () {}
-  var transports = []
-    .concat(opts.transport || ADSL.defaultTransport)
-    .map(function (transport) { return transport(level, levelIndex) })
+  var level, levelIndex, logger = {}
+  var transports = [].concat(opts.transport || ADSL.defaultTransport)
 
-  ADSL.levels.forEach(function (lvl, lvlIndex) {
-    logger[lvl] = function () {
-      var message = util.format.apply(util, arguments)
-
-      transports.forEach(function (transport) {
-        transport(message, prefix(lvl, lvlIndex), lvl, lvlIndex)
-      })
+  Object.defineProperties(logger, {
+    'level': {
+      get: function () { return level },
+      set: function (value) {
+        value = typeof value === 'number' ? ADSL.levels[value] : value
+        level = ~ADSL.levels.indexOf(value) ? value : ADSL.defaultLevel
+        levelIndex = ADSL.levels.indexOf(level)
+      }
+    },
+    'levelIndex': {
+      get: function () { return levelIndex },
+      set: function (value) { logger.level = ADSL.levels[value]}
+    },
+    'log': {
+      value: function () {
+        var args = [].slice.call(arguments)
+        var lvl = ~ADSL.levels.indexOf(args[0]) ? args.shift() : ADSL.defaultLevel
+        var lvlIndex = ADSL.levels.indexOf(lvl)
+        var shouldLog = lvlIndex >= levelIndex
+        var msg = util.format.apply(util, args)
+        if (opts.prefix) {
+          msg = util.format(opts.prefix(lvl, lvlIndex), msg)
+        }
+        transports.forEach(function (transport) {
+          transport(msg, shouldLog, lvl, lvlIndex)
+        })
+      }
     }
   })
 
-  logger.log = logger.info
+  ADSL.levels.forEach(function (lvl) {
+    logger[lvl] = logger.log.bind(null, lvl)
+  })
+
+  logger.level = opts.level
 
   return logger
 }
 
 ADSL.levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal']
 ADSL.defaultLevel = 'info'
-ADSL.defaultTransport = function (level, levelIndex) {
-  var polyfill = {
-    trace: console.info,
-    debug: console.info,
-    fatal: console.error
-  }
-
-  return function (message, prefix, lvl, lvlIndex) {
-    lvlIndex >= levelIndex &&
-      (console[lvl] || polyfill[lvl] || console.log)
-        .call(console, prefix ? util.format(prefix, message) : message)
-  }
+ADSL.outputMap = {
+  trace: 'info',
+  debug: 'info',
+  fatal: 'error'
+}
+ADSL.defaultTransport = function (msg, shouldLog, lvl, lvlIndex) {
+  shouldLog &&
+    (console[ADSL.outputMap[lvl] || lvl] || console.log).call(console, msg)
 }
 
 module.exports = ADSL
