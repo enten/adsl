@@ -71,6 +71,8 @@ logWriteStream.end(os.EOL)
 
 ```
 
+![example output](https://raw.githubusercontent.com/enten/adsl/master/example.png)
+
 ## Options
 
 Configure the logger by passing an options object:
