@@ -5,24 +5,24 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
 
 A dead simple logger. Will [log to STDOUT or STDERR depending on the chosen log
-level](https://github.com/enten/adsl/blob/master/index.js#L82). It uses
+level](https://github.com/enten/adsl/blob/master/index.js#L81). It uses
 `console.info`, `console.warn` and `console.error` and hence supports the same API.
 
 ## Log levels sets supported
 
-### [npm](https://github.com/enten/adsl/blob/master/index.js#L79) (default)
+### [npm](https://github.com/enten/adsl/blob/master/index.js#L78) (default)
 
 ```javascript
 { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 ```
 
-### [console-log-level](https://github.com/enten/adsl/blob/master/index.js#L78):
+### [console-log-level](https://github.com/enten/adsl/blob/master/index.js#L77):
 
 ```javascript
 { fatal: 0, error: 1, warn: 2, info: 3, debug: 4 }
 ```
 
-### [rfc5424](https://github.com/enten/adsl/blob/master/index.js#L80):
+### [rfc5424](https://github.com/enten/adsl/blob/master/index.js#L79):
 
 ```javascript
 { emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 }
